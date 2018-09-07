@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  * @Date: Create in 13:53 2018/9/7
  */
 @Controller
+@RequestMapping(value = "message")
 public class MessageController {
     public static final Logger log = LoggerFactory.getLogger(MessageController.class);
 
