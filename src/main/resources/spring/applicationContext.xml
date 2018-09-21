@@ -17,6 +17,14 @@
     <mvc:default-servlet-handler/>
     <mvc:annotation-driven/>
 
+    <!--<mvc:annotation-driven>-->
+        <!--<mvc:message-converters>-->
+            <!--<bean class="org.springframework.http.converter.StringHttpMessageConverter"/>-->
+            <!--<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>-->
+        <!--</mvc:message-converters>-->
+    <!--</mvc:annotation-driven>-->
+
+
     <!--静态资源不做处理-->
     <!-- 资源管理 -->
     <!--<mvc:resources mapping="/imgs/**" location="/imgs/"/>-->

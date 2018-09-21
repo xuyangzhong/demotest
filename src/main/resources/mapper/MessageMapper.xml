@@ -2,15 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.zxy.dao.MessageDao">
-    <insert id="saveOrUpdateUserData">
+    <insert id="saveUserData">
         <!--<selectKey keyProperty="count" resultType="int" order="BEFORE">-->
-            <!--select count(*) from userdata where id = #{id};-->
+        <!--select count(*) from userdata where id = #{id};-->
         <!--</selectKey>-->
         <!--<if test="count > 0">-->
-            <!--update userdata set time=#{time},username=#{username},name=#{name},size=#{size},num=#{num},weight=#{weight},priceWithTax=#{priceWithTax},price=#{price},salesman=#{salesman},invoice=#{invoice}-->
+        <!--update userdata set time=#{time},username=#{username},name=#{name},size=#{size},num=#{num},weight=#{weight},priceWithTax=#{priceWithTax},price=#{price},salesman=#{salesman},invoice=#{invoice}-->
         <!--</if>-->
         <!--<if test="count == 0">-->
-            insert into userdata (time,username,name,size,num,weight,priceWithTax,price,salesman,invoice) values (#{time},#{username},#{name},#{size},#{num},#{weight},#{priceWithTax},#{price},#{salesman},#{invoice})
+        INSERT INTO maintable (fphm_, xh_, fgs_,fhrq_, dwmc_3, pm_, gg_, sl_1, sl_2, dj_, je_, gfdb_, invoice) VALUES
+        (#{fphm_}, #{xh_}, #{fgs_},#{fhrq_}, #{dwmc_3}, #{pm_}, #{gg_}, #{sl_1}, #{sl_2}, #{dj_}, #{je_}, #{gfdb_},#{invoice});
         <!--</if>-->
     </insert>
+
+    <update id="updateInvoice">
+        update maintable set invoice = #{invoice} where id = #{id};
+    </update>
+
+    <select id="getAllUserData" resultType="com.zxy.model.UserData">
+        select * from maintable;
+    </select>
 </mapper>
