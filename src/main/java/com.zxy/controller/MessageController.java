@@ -2,6 +2,7 @@ package com.zxy.controller;
 
 import com.zxy.dao.MessageDao;
 import com.zxy.model.UserData;
+import com.zxy.task.SynchronizeSqlServerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,9 @@ public class MessageController {
     @Resource
     private MessageDao messageDao;
 
+    @Resource
+    private SynchronizeSqlServerTask synchronizeSqlServerTask;
+
     @RequestMapping(value = "/index")
     public ModelAndView login(HttpServletRequest request, HttpServletResponse response) {
         ModelAndView mav = new ModelAndView();
@@ -45,11 +49,17 @@ public class MessageController {
         return answer;
     }
 
-    //模拟数据录入
-    @RequestMapping(value = "/collect")
-    public ModelAndView collect(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("collect");
-        return mav;
+    @RequestMapping(value = "/update")
+    @ResponseBody
+    public String update(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        synchronizeSqlServerTask.synSqlServerRun();
+        return "success";
+    }
+
+    @RequestMapping(value = "/bill")
+    @ResponseBody
+    public String insertUserData(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String[] idStr = request.getParameterValues("chosedId");
+        return "";
     }
 }

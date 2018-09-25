@@ -10,8 +10,8 @@
         <!--update userdata set time=#{time},username=#{username},name=#{name},size=#{size},num=#{num},weight=#{weight},priceWithTax=#{priceWithTax},price=#{price},salesman=#{salesman},invoice=#{invoice}-->
         <!--</if>-->
         <!--<if test="count == 0">-->
-        INSERT INTO maintable (fphm_, xh_, fgs_,fhrq_, dwmc_3, pm_, gg_, sl_1, sl_2, dj_, je_, gfdb_, invoice) VALUES
-        (#{fphm_}, #{xh_}, #{fgs_},#{fhrq_}, #{dwmc_3}, #{pm_}, #{gg_}, #{sl_1}, #{sl_2}, #{dj_}, #{je_}, #{gfdb_},#{invoice});
+        INSERT INTO maintable (fphm_, xh_, fgs_,fhrq_, dwmc_3, pm_, gg_, sl_1, sl_2, dj_, je_, gfdb_) VALUES
+        (#{fphm_}, #{xh_}, #{fgs_},#{fhrq_}, #{dwmc_3}, #{pm_}, #{gg_}, #{sl_1}, #{sl_2}, #{dj_}, #{je_}, #{gfdb_});
         <!--</if>-->
     </insert>
 

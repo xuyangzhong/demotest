@@ -1,5 +1,6 @@
 package com.zxy.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -19,8 +20,8 @@ public class UserData {
     private int xh_;
     //所属公司
     private String fgs_;
-    //日期
-    private Date fhrq_;
+    //日期String
+    private String fhrq_;
     //客户单位
     private String dwmc_3;
     //品名
@@ -39,6 +40,11 @@ public class UserData {
     private String gfdb_;
     //开票单号
     private String invoice;
+
+//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+//    public Date getFhrq_() {
+//        return fhrq_;
+//    }
 
     @Override
     public String toString() {

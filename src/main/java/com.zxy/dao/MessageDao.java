@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 @MapperScan
 public interface MessageDao {
-    int saveUserData(@Param("fphm_") Date fphm_, @Param("xh_") int xh_, @Param("fgs_") Date fgs_, @Param("fhrq_") Date fhrq_, @Param("dwmc_3") String dwmc_3, @Param("pm_") String pm_, @Param("gg_") String gg_, @Param("sl_1") BigDecimal sl_1, @Param("sl_2") BigDecimal sl_2, @Param("dj_") BigDecimal dj_, @Param("je_") BigDecimal je_, @Param("gfdb_") String gfdb_, @Param("invoice") String invoice);
+    int saveUserData(@Param("fphm_") String fphm_, @Param("xh_") int xh_, @Param("fgs_") String fgs_, @Param("fhrq_") String fhrq_, @Param("dwmc_3") String dwmc_3, @Param("pm_") String pm_, @Param("gg_") String gg_, @Param("sl_1") BigDecimal sl_1, @Param("sl_2") BigDecimal sl_2, @Param("dj_") BigDecimal dj_, @Param("je_") BigDecimal je_, @Param("gfdb_") String gfdb_);
     int updateInvoice(@Param("id") int id, @Param("invoice") String invoice);
     ArrayList<UserData> getAllUserData();
 }
