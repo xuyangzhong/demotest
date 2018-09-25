@@ -59,7 +59,17 @@ public class MessageController {
     @RequestMapping(value = "/bill")
     @ResponseBody
     public String insertUserData(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String[] idStr = request.getParameterValues("chosedId");
+        String idStr = java.net.URLDecoder.decode(request.getParameter("chosedId"),"UTF-8");
+        String invoicenum = request.getParameter("invoicenum");
+        String[] idStrs = idStr.substring(1,idStr.length()-1).split(",");
+        ArrayList<Integer> ids = new ArrayList<>();
+        for(String i : idStrs){
+            ids.add(Integer.parseInt(i));
+        }
+        for(int id : ids){
+//            messageDao.updateInvoice(id,invoicenum);
+            System.out.println(id);
+        }
         return "";
     }
 }
