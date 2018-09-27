@@ -2,12 +2,15 @@ package com.zxy.task;
 
 import com.zxy.dao.MessageDao;
 import com.zxy.model.UserData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import sun.plugin2.message.Message;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.annotation.Resource;
 
@@ -19,11 +22,21 @@ import javax.annotation.Resource;
 
 @Component
 public class SynchronizeSqlServerTask {
+    public static final Logger log = LoggerFactory.getLogger(SynchronizeSqlServerTask.class);
 
     private final static String URL = "jdbc:jtds:sqlserver://192.168.1.2:1433;DatabaseName=gderp30";
     private static final String USER = "sa";
     private static final String PASSWORD = "";
     private static Connection conn = null;
+    private static Date preDate;
+
+    static{
+        try {
+            preDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-01-01 00:00:00");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     ArrayList<UserData> allData = new ArrayList<>();
     ArrayList<UserData> addData = new ArrayList<>();
@@ -37,7 +50,7 @@ public class SynchronizeSqlServerTask {
     @Scheduled(cron = "0 0 0 * * ?")
     public void synSqlServerRun() {
         try{
-            Thread.sleep(2000);
+            Thread.sleep(3000);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -50,6 +63,7 @@ public class SynchronizeSqlServerTask {
 //            ResultSet rs = stmt.executeQuery("select xs_dhd.dwmc_3,xs_dhd_a.fphm_,xs_dhd_a.xh_,xs_dhd_a.fgs_,convert(varchar(100),xs_dhd_a.fhrq_,20) as rq_,xs_dhd_a.pm_,xs_dhd_a.gg_,xs_dhd_a.sl_1,xs_dhd_a.sl_2,xs_dhd_a.dj_,xs_dhd_a.je_,xs_dhd_a.gfdb_,xs_dhd_a.invoice from sx_dhd_a left join xs_dhd on xs_dhd_a.fphm_ = xs_dhd.fphm_ and xs_dhd_a.fgs_ = xs_dhd.fgs_ order by xs_dhd_a.fhrq_");
 //            classifyData(rs);
 //            update();
+//
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        } finally {
@@ -68,10 +82,13 @@ public class SynchronizeSqlServerTask {
             messageDao.saveUserData(data.getFphm_(), data.getXh_(), data.getFgs_(), data.getFhrq_(), data.getDwmc_3(), data.getPm_(), data.getGg_(), data.getSl_1(), data.getSl_2(), data.getDj_(), data.getJe_(), data.getGfdb_());
         }
         allData.addAll(addData);
+        addData.clear();
     }
 
     private void classifyData(ResultSet rs) throws Exception {
-        if (rs.next()) {
+        boolean tag = false;
+        Date date = null;
+        while (rs.next()) {
             boolean addTag = true;
             UserData userData = new UserData();
             userData.setFphm_(rs.getString("fphm_"));
@@ -86,6 +103,15 @@ public class SynchronizeSqlServerTask {
             userData.setDj_(rs.getBigDecimal("dj_"));
             userData.setJe_(rs.getBigDecimal("je_"));
             userData.setGfdb_(rs.getString("gfdb_"));
+            //记录第一个，即最新的时间（desc）
+            if(tag == false){
+                date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(rs.getString("rq_"));
+                tag = true;
+            }
+            Date d = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(rs.getString("rq_"));
+            if(d.getTime()<preDate.getTime()){
+                continue;
+        }
             for (UserData data : allData) {
                 if (data.getFphm_().equals(data.getFphm_())) {
                     if (userData.getXh_() == data.getXh_()) {
@@ -103,5 +129,18 @@ public class SynchronizeSqlServerTask {
                 addData.add(userData);
             }
         }
+        if(date!=null) {
+            log.info(String.format("update success! preDate changes from %s ti %s",preDate.getTime(),date.getTime()));
+            preDate = date;
+        }
     }
+
+//    public static void main(String[] args)throws Exception{
+//        String time = "2017-10-19";
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//yyyy-mm-dd, 会出现时间不对, 因为小写的mm是代表: 秒
+//        Date utilDate = sdf.parse(time);
+//        System.out.println(utilDate);//查看utilDate的值
+//        Date date = new java.sql.Date(utilDate.getTime());
+//        System.out.println(date);//查看date的值
+//    }
 }

@@ -67,7 +67,7 @@ public class MessageController {
             ids.add(Integer.parseInt(i));
         }
         for(int id : ids){
-//            messageDao.updateInvoice(id,invoicenum);
+            messageDao.updateInvoice(id,invoicenum);
             System.out.println(id);
         }
         return "";
