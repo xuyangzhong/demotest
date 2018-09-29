@@ -20,6 +20,34 @@
     </update>
 
     <select id="getAllUserData" resultType="com.zxy.model.UserData">
-        select * from maintable;
+        select * from maintable order by fhrq_ desc limit #{beginpage},#{endpage};
+    </select>
+
+    <select id="getAllSize" resultType="java.lang.Integer">
+        select count(*) from maintable;
+    </select>
+
+    <select id="getUserInfoWithNoInvoice" resultType="com.zxy.model.UserData">
+        select * from maintable where invoice='' or invoice is null order by fhrq_ desc limit #{beginpage},#{endpage};
+    </select>
+
+    <select id="getNoInvoiceSize" resultType="java.lang.Integer">
+        select count(*) from maintable where invoice='' or invoice is null;
+    </select>
+
+    <select id="getUserInfoWithInvoice" resultType="com.zxy.model.UserData">
+        select * from maintable where invoice!='' and invoice is not null order by fhrq_ desc limit #{beginpage},#{endpage};
+    </select>
+
+    <select id="getInvoiceSize" resultType="java.lang.Integer">
+        select count(*) from maintable where invoice!='' and invoice is not null;
+    </select>
+
+    <select id="getUserInfoWithKey" resultType="com.zxy.model.UserData">
+        select * from maintable where dwmc_3 like "%${key}%" order by fhrq_ desc limit #{beginpage},#{endpage};
+    </select>
+
+    <select id="getSearchSize" resultType="java.lang.Integer">
+        select count(*) from maintable where dwmc_3 like "%${key}%";
     </select>
 </mapper>

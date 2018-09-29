@@ -41,19 +41,70 @@ public class MessageController {
 
     @RequestMapping(value="/userinfo")
     @ResponseBody
-    public HashMap<String,ArrayList<UserData>> getAllUserInfo(HttpServletRequest request, HttpServletResponse response){
+    public HashMap<String,Object> getAllUserInfo(HttpServletRequest request, HttpServletResponse response){
+        int currentpage = Integer.parseInt(request.getParameter("currentpage"));
+        int beginpage = (currentpage-1)*20;
+        int endpage = currentpage*20;
         ArrayList<UserData> userDatas;
-        userDatas = messageDao.getAllUserData();
-        HashMap<String,ArrayList<UserData>> answer = new HashMap<>();
+        userDatas = messageDao.getAllUserData(beginpage,endpage);
+        int totalsize = messageDao.getAllSize();
+        HashMap<String,Object> answer = new HashMap<>();
         answer.put("users",userDatas);
+        answer.put("totalsize",totalsize);
+        return answer;
+    }
+
+    @RequestMapping(value="/userinfowithnoinvoice")
+    @ResponseBody
+    public HashMap<String,Object> getUserInfoWithNoInvoice(HttpServletRequest request, HttpServletResponse response){
+        int currentpage = Integer.parseInt(request.getParameter("currentpage"));
+        int beginpage = (currentpage-1)*20;
+        int endpage = currentpage*20;
+        ArrayList<UserData> userDatas;
+        userDatas = messageDao.getUserInfoWithNoInvoice(beginpage,endpage);
+        int totalsize = messageDao.getNoInvoiceSize();
+        HashMap<String,Object> answer = new HashMap<>();
+        answer.put("users",userDatas);
+        answer.put("totalsize",totalsize);
+        return answer;
+    }
+
+    @RequestMapping(value="/userinfowithinvoice")
+    @ResponseBody
+    public HashMap<String,Object> getUserInfoWithInvoice(HttpServletRequest request, HttpServletResponse response){
+        int currentpage = Integer.parseInt(request.getParameter("currentpage"));
+        int beginpage = (currentpage-1)*20;
+        int endpage = currentpage*20;
+        ArrayList<UserData> userDatas;
+        userDatas = messageDao.getUserInfoWithInvoice(beginpage,endpage);
+        int totalsize = messageDao.getInvoiceSize();
+        HashMap<String,Object> answer = new HashMap<>();
+        answer.put("users",userDatas);
+        answer.put("totalsize",totalsize);
+        return answer;
+    }
+
+    @RequestMapping(value="/userinfowithkey")
+    @ResponseBody
+    public HashMap<String,Object> getUserInfoWithKey(HttpServletRequest request, HttpServletResponse response){
+        String key = request.getParameter("searchword");
+        int currentpage = Integer.parseInt(request.getParameter("currentpage"));
+        int beginpage = (currentpage-1)*20;
+        int endpage = currentpage*20;
+        ArrayList<UserData> userDatas;
+        userDatas = messageDao.getUserInfoWithKey(key,beginpage,endpage);
+        int totalsize = messageDao.getSearchSize(key);
+        HashMap<String,Object> answer = new HashMap<>();
+        answer.put("users",userDatas);
+        answer.put("totalsize",totalsize);
         return answer;
     }
 
     @RequestMapping(value = "/update")
     @ResponseBody
     public String update(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        synchronizeSqlServerTask.synSqlServerRun();
-        return "success";
+        String code = synchronizeSqlServerTask.synSqlServerRun();
+        return code;
     }
 
     @RequestMapping(value = "/bill")
