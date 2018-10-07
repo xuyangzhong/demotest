@@ -33,6 +33,8 @@ public interface MessageDao {
 
     ArrayList<UserData> getUserInfoWithKey(@Param("key") String key, @Param("beginpage") int beginpage, @Param("endpage") int endpage);
 
-    int getSearchSize(String key);
+    int getSearchSize(@Param("key")String key);
+
+    UserData getNewDate();
 }
 

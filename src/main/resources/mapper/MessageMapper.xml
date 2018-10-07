@@ -50,4 +50,8 @@
     <select id="getSearchSize" resultType="java.lang.Integer">
         select count(*) from maintable where dwmc_3 like "%${key}%";
     </select>
+
+    <select id="getNewDate">
+        select * from maintable order by fhrq_ desc limit 1
+    </select>
 </mapper>

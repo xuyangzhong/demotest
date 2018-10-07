@@ -50,13 +50,10 @@ public class SynchronizeSqlServerTask {
 
     //    @Scheduled(cron = "*/5 * * * * ?")
     @Scheduled(cron = "0 0 0 * * ?")
-    public String synSqlServerRun() {
-        String code = "";
-        try {
-            Thread.sleep(3000);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public String synSqlServerRun() throws Exception{
+        UserData userData = messageDao.getNewDate();
+        preDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(userData.getFhrq_());
+        String code;
         log.info("update begin......");
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
@@ -94,18 +91,13 @@ public class SynchronizeSqlServerTask {
             Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(data.getFhrq_());
             if (date != null) {
                 log.info(String.format("update success! preDate changes from %s ti %s", preDate.getTime(), date.getTime()));
-                preDate = date;
             }
         }
-        allData.addAll(addData);
         addData.clear();
     }
 
     private void classifyData(ResultSet rs) throws Exception {
-        boolean tag = false;
-        Date date = null;
         while (rs.next()) {
-            boolean addTag = true;
             UserData userData = new UserData();
             userData.setFphm_(rs.getString("fphm_"));
             userData.setXh_(rs.getInt("xh_"));
@@ -119,31 +111,23 @@ public class SynchronizeSqlServerTask {
             userData.setDj_(rs.getBigDecimal("dj_"));
             userData.setJe_(rs.getBigDecimal("je_"));
             userData.setGfdb_(rs.getString("gfdb_"));
-            //记录第一个，即最新的时间（desc）
-            if (tag == false) {
-                date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(rs.getString("rq_"));
-                tag = true;
-            }
             Date d = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(rs.getString("rq_"));
-            if (d.getTime() < preDate.getTime()) {
+            if (d.getTime() < preDate.getTime() && d.getTime() == preDate.getTime()) {
                 break;
             }
-            for (UserData data : allData) {
-                if (data.getFphm_().equals(data.getFphm_())) {
-                    if (userData.getXh_() == data.getXh_()) {
-                        if (userData.getFgs_() == null) {
-                            continue;
-                        }
-                        if (userData.getFgs_().equals(data.getFgs_())) {
-                            addTag = false;
-                            break;
-                        }
-                    }
-                }
-            }
-            if (addTag == true) {
-                addData.add(userData);
-            }
+//            for (UserData data : allData) {
+//                if (data.getFphm_().equals(data.getFphm_())) {
+//                    if (userData.getXh_() == data.getXh_()) {
+//                        if (userData.getFgs_() == null && data.getFgs_() == null) {
+//                            break;
+//                        }
+//                        if (userData.getFgs_().equals(data.getFgs_())) {
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
+            addData.add(userData);
         }
     }
 
